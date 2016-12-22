@@ -30,9 +30,15 @@ def NetCheck(ip):
         return -2
 
 def NetPing(ip,PingTime):
-    Timelist = []
-    for i in range(PingTime):
+    first = NetCheck(ip)
+    Timelist = [first]
+    if first < 0:
+        for i in range(PingTime-1):
+            Timelist.append(first)
+        return Timelist
+
+    for i in range(PingTime-1):
         Timelist.append(NetCheck(ip))
     return Timelist
 
-print NetPing("59.78.20.254",10)
+print NetPing("59.78.20.232",10)
