@@ -41,4 +41,4 @@ def NetPing(ip,PingTime):
         Timelist.append(NetCheck(ip))
     return Timelist
 
-print NetPing("59.78.20.232",10)
+#print NetPing("59.78.20.232",10)

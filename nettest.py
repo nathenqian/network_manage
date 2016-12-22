@@ -24,5 +24,5 @@ def TraceCheck(ip,MaxTTL):
         #print 'NetCheck work error!'
         return []
 
-print TraceCheck('59.78.20.254',20)
+#print TraceCheck('59.78.20.254',20)
 #print "traceroute -m "+ str(MaxTTL)+ " " + ip
