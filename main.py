@@ -5,7 +5,7 @@ from test import NetPing
 import threading
 import random
 import randomSize
-
+from json import dumps
 THREAD_NUMBER = 50
 CNT = 0
 
@@ -19,6 +19,8 @@ def run(tasks, lock, results):
         lock.release()
         if task_cnt == 0:
             return
+        if task_cnt % 100 == 0:
+            print "tasks size %d" % (task_cnt)
         ip_entry = task[0]
         ip = parse_ip(ip_entry[0])
         chooseList = []
@@ -35,21 +37,29 @@ def run(tasks, lock, results):
         random.shuffle(chooseList)
         chooseLen = randomSize.getSize(ip_entry[2])
         for i in range(chooseLen):
-            print NetPing(chooseList[i], 3)
+            result = NetPing(chooseList[i], 5)
+            CNT += 1
+            if CNT % 1000 == 0:
+                print "have run %d task" % (CNT)
+            lock.acquire()
+            results[task[1]].append(result)
+            lock.release()
 
-
-if __name__ == "__main__":
+def main(output_file_name):
     ip_dir = "ip/"
     regions = {}
     # total_ips = 0
-
+    results = {}
     for filename in listdir(ip_dir):
         if filename.endswith(".txt"):
             file_places = parse_file(join(ip_dir, filename))
             regions[filename[:-4]] = file_places
+            results[filename[:-4]] = []
+            break
             # for i in file_places:
                 # total_ips += i[2]
     # print total_ips
+
     cnt = 0
 
     threads = []
@@ -57,7 +67,7 @@ if __name__ == "__main__":
 
     lock = threading.Lock()
     tasks = []
-    results = []
+    
     for i in range(THREAD_NUMBER):
         threads.append(threading.Thread(target = run, args=(tasks, lock, results)))
 
@@ -76,3 +86,11 @@ if __name__ == "__main__":
 
     for i in threads:
         i.join()
+
+    with open(output_file_name, "w") as f:
+        f.write(dumps(results, indent = 4))
+
+
+
+if __name__ == "__main__":
+    main("result.json")
