@@ -12,6 +12,8 @@ def NetCheck(ip):
     #print out
     #print regex
     #print err
+        #print out
+        #print reget.findall(out)
         if len(regex.findall(out)) == 0:
             #print ip + ': host up'
             lines = out.split('\n')
@@ -27,6 +29,10 @@ def NetCheck(ip):
         #print 'NetCheck work error!'
         return -2
 
+def NetPing(ip,PingTime):
+    Timelist = []
+    for i in range(PingTime):
+        Timelist.append(NetCheck(ip))
+    return Timelist
 
-
-print NetCheck("114.80.68.233")
+print NetPing("59.78.20.254",10)
