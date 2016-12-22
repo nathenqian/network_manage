@@ -3,6 +3,8 @@ from os.path import join
 from ip_parse import parse_file, parse_ip, next_ip, ip_list2str
 from test import NetPing
 import threading
+import random
+import randomSize
 
 THREAD_NUMBER = 50
 CNT = 0
@@ -19,12 +21,21 @@ def run(tasks, lock, results):
             return
         ip_entry = task[0]
         ip = parse_ip(ip_entry[0])
+        chooseList = []
+
         for i in range(ip_entry[2]):
-            NetPing(ip_list2str(ip), 3)
-            CNT += 1
+            #NetPing(ip_list2str(ip), 3)
+            #CNT += 1
+            #next_ip(ip)
+            #if CNT % 100 == 0:
+            #    print CNT
+            chooseList.append(ip_list2str(ip))
             next_ip(ip)
-            if CNT % 100 == 0:
-                print CNT
+
+        random.shuffle(chooseList)
+        chooseLen = randomSize.getSize(ip_entry[2])
+        for i in range(chooseLen):
+            print NetPing(chooseList[i], 3)
 
 
 if __name__ == "__main__":
@@ -42,7 +53,7 @@ if __name__ == "__main__":
     cnt = 0
 
     threads = []
-    
+
 
     lock = threading.Lock()
     tasks = []
