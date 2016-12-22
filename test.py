@@ -33,8 +33,8 @@ def NetPing(ip,PingTime):
     first = NetCheck(ip)
     Timelist = [first]
     if first < 0:
-        for i in range(PingTime-1):
-            Timelist.append(first)
+        #for i in range(PingTime-1):
+        #    Timelist.append(first)
         return Timelist
 
     for i in range(PingTime-1):
