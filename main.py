@@ -1,3 +1,4 @@
+#coding=utf-8
 from os import listdir
 from os.path import join
 from ip_parse import parse_file, parse_ip, next_ip, ip_list2str
@@ -8,6 +9,7 @@ import randomSize
 from json import dumps
 THREAD_NUMBER = 50
 CNT = 0
+import time
 
 def run(tasks, lock, results):
     global CNT
@@ -55,7 +57,7 @@ def main(output_file_name):
             file_places = parse_file(join(ip_dir, filename))
             regions[filename[:-4]] = file_places
             results[filename[:-4]] = []
-            break
+            # break
             # for i in file_places:
                 # total_ips += i[2]
     # print total_ips
@@ -67,7 +69,7 @@ def main(output_file_name):
 
     lock = threading.Lock()
     tasks = []
-    
+
     for i in range(THREAD_NUMBER):
         threads.append(threading.Thread(target = run, args=(tasks, lock, results)))
 
@@ -93,4 +95,18 @@ def main(output_file_name):
 
 
 if __name__ == "__main__":
-    main("result.json")
+
+    for i in range(24):
+        start = time.clock()
+        outfile = 'result'+str(i)+'.json'
+        main(outfile)
+        end = time.clock()
+        spendTime = end - start
+        print "finish :" + str(i)
+        print "spendTime : %.4f" % spendTime;
+        if spendTime < 3600:
+            time.sleep(int(3600.0-spendTime))
+
+        #print "finish :" + str(i)
+
+    #main("result.json")
